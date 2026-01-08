@@ -1,0 +1,17 @@
+﻿@using App.Presentation.Helpers
+
+@{
+    
+
+    if (TempData["NotificationMsg"] != null)
+    {
+        var notification = TempData["NotificationMsg"] as Notification;
+        <div class="alert alert-@notification.CssClass alert-dismissible fade show" role="alert" id="alert">
+            @Html.Raw(@notification.Text)
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+
+    }
+
+}

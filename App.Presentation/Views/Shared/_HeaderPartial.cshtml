@@ -1,0 +1,148 @@
+﻿@inject IidentityService _IdentityService;
+
+<style>
+    /* 🔹 Header Styling */
+    #page-topbar {
+        background-color: #1f2937; /* dark slate background */
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 999;
+    }
+
+    .navbar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .logo img {
+        height: 60px;
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+
+    /* 🔹 Buttons Group (Login/Register) */
+    .btnend {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+        .btnend button {
+            background: transparent;
+            border: 1px solid #4ade80;
+            border-radius: 20px;
+            padding: 5px 15px;
+            color: #4ade80;
+            transition: all 0.3s ease-in-out;
+            font-weight: 500;
+        }
+
+            .btnend button:hover {
+                background: #4ade80;
+                color: #fff;
+                box-shadow: 0 0 10px rgba(74, 222, 128, 0.6);
+            }
+
+    /* 🔹 User Profile Dropdown */
+    .header-profile-user {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #4ade80;
+        object-fit: cover;
+    }
+
+    #page-header-user-dropdown {
+        color: #fff;
+        font-weight: 500;
+    }
+
+        #page-header-user-dropdown:hover {
+            color: #4ade80;
+        }
+
+    .dropdown-menu {
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        min-width: 180px;
+    }
+
+    .dropdown-item i {
+        color: #0d6efd;
+        margin-right: 6px;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f3f4f6;
+    }
+</style>
+
+<header id="page-topbar">
+    <div class="navbar-header">
+        <!-- 🔹 Left Section: Logo -->
+        <div class="d-flex align-items-center">
+            <a asp-controller="Home" asp-action="Index" class="logo d-flex align-items-center text-decoration-none">
+                <span class="logo-sm">
+                    <img class="stretched-image" src="~/AdminLayout/assets/images/clincilogo.jpg" alt="Logo Small">
+                </span>
+                <span class="logo-lg text-light ms-2 fw-semibold fs-5">
+                    <img class="stretched-image" src="~/AdminLayout/assets/images/clincilogo.jpg" alt="Logo Large">
+                </span>
+            </a>
+        </div>
+
+        <!-- 🔹 Right Section: Language, User Menu -->
+        <div class="d-flex align-items-center gap-3">
+            <div class="dropdown">
+                @await Html.PartialAsync("_SetLanguagePartial")
+            </div>
+
+            @if (_IdentityService.IsSignedInUser(User))
+            {
+                <div class="dropdown">
+                    <button type="button" class="btn header-item d-flex align-items-center gap-2"
+                            id="page-header-user-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="rounded-circle header-profile-user"
+                             src="~/AdminLayout/assets/images/users/profile.png"
+                             alt="User Avatar">
+                        <span>Welcome, @User.Identity.Name</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="#">
+                            <i class="mdi mdi-account-circle font-size-17 align-middle"></i> Profile
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <form method="post" asp-action="LogOut" asp-controller="Account">
+                            <button type="submit" class="dropdown-item text-danger fw-semibold">
+                                <i class="mdi mdi-logout font-size-17 align-middle me-1"></i> Log Out
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="btnend">
+                    <form method="get" asp-action="Register" asp-controller="Account">
+                        <button type="submit">
+                            <i class="mdi mdi-account-plus-outline"></i> Register
+                        </button>
+                    </form>
+                    <form method="get" asp-action="LogIn" asp-controller="Account">
+                        <button type="submit">
+                            <i class="mdi mdi-login"></i> Login
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</header>

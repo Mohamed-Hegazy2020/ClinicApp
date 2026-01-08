@@ -1,0 +1,65 @@
+﻿@model App.Presentation.Models.Basics.ClinicModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="card">
+    <form asp-action="Create" enctype="multipart/form-data">
+        <div class="card-header card-header-55">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-check button-icon"></i>
+               Save"
+            </button>
+        </div>
+        <div class="card-body card-body-500 justify-content-center d-flex">
+            <div class="row w-75">
+                <div class="col-md-8">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Code" class="control-label"></label>
+                        <input asp-for="Code" class="form-control" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NameAr" class="control-label"></label>
+                        <input asp-for="NameAr" class="form-control" />
+                        <span asp-validation-for="NameAr" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NameEn" class="control-label"></label>
+                        <input asp-for="NameEn" class="form-control" />
+                        @* <span asp-validation-for="NameEn" class="text-danger"></span> *@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        @* <span asp-validation-for="Email" class="text-danger"></span> *@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Phone" class="control-label"></label>
+                        <input asp-for="Phone" class="form-control" />
+                        @* <span asp-validation-for="Phone" class="text-danger"></span> *@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Fax" class="control-label"></label>
+                        <input asp-for="Fax" class="form-control" />
+                        @* <span asp-validation-for="Fax" class="text-danger"></span> *@
+                    </div>                 
+                   
+                   
+                   
+                </div>
+              
+
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+
+<html lang="@Thread.CurrentThread.CurrentCulture.TextInfo.CultureName" data-bs-theme="auto" dir="@(Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft? "rtl" : "ltr")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClinicApp - @ViewData["Title"]</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ClinicApp">
+
+    <title></title>
+    <link rel="shortcut icon" href="~/AdminLayout/assets/images/favicon.ico">
+    <link href="~/AdminLayout/assets/libs/chartist/chartist.min.css" rel="stylesheet">
+
+    <!-- Bootstrap core CSS -->
+    @if (Thread.CurrentThread.CurrentCulture.Name == "ar")
+    {
+        <link href="~/AdminLayout/assets/css/bootstrap-rtl.min.css" rel="stylesheet" />
+        <link href="~/AdminLayout/assets/css/icons-rtl.min.css" rel="stylesheet" />
+        <link href="~/AdminLayout/assets/css/app-rtl.min.css" rel="stylesheet" />
+        <link href="~/css/styles.rtl.css" rel="stylesheet" />
+
+    }
+    else
+    {
+        <link href="~/AdminLayout/assets/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/AdminLayout/assets/css/icons.min.css" rel="stylesheet" type="text/css">
+        <link href="~/AdminLayout/assets/css/app.min.css" rel="stylesheet" />
+        <link href="~/css/styles.css" rel="stylesheet" />
+
+    }
+
+    <link href="~/css/bootstrap-icons.css" rel="stylesheet" />
+    <link href="~/CairoFont/static/CairoArabicFonts.css" rel="stylesheet" />
+    <link href="~/css/fontawesome.css" rel="stylesheet" />
+    <link href="~/style-custom.rtl.css" rel="stylesheet" />
+    <script src="~/js/grid.custom.js"></script>
+</head>
+
+<body style="background-color: #154360">
+
+    <div class="container-fluid pt-2">
+        @RenderBody()
+    </div>
+
+
+
+    @*@await Html.PartialAsync("_FooterPartial")*@
+    <script src="~/AdminLayout/assets/libs/jquery/jquery.min.js"></script>
+    <script src="~/AdminLayout/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+</body>
+</html>
