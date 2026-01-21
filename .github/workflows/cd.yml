@@ -37,7 +37,7 @@ jobs:
 
         & $msdeploy `
           "-verb:sync" `
-          "-source:contentPath=$Env:WEBDEPLOY_SITE" `
+          "-source:contentPath=publish" `
           "-dest:contentPath=$Env:WEBDEPLOY_SITE,computerName=$Env:WEBDEPLOY_SERVER,userName=$Env:WEBDEPLOY_USERNAME,password=$Env:WEBDEPLOY_PASSWORD,authType=Basic" `
           "-allowUntrusted"
       env:
