@@ -1,29 +1,34 @@
-name: Deploy ASP.NET Core to MonsterASP.NET via Web Deploy
+name: Deploy ClinicApp to MonsterASP.NET via Web Deploy
 
 on:
   push:
     branches:
-      - main   # Deploy on push to main branch
+      - main   # Trigger deployment on push to main branch
 
 jobs:
   build-and-deploy:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
+    # Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v3
 
+    # Setup .NET SDK
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x' # Use your project .NET version
+        dotnet-version: '8.0.x'  # Adjust to your .NET version
 
+    # Restore NuGet packages
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ClinicApp.sln
 
+    # Build & publish the solution
     - name: Build and publish
-      run: dotnet publish ./ClinicApp.sln -c Release -o publish
+      run: dotnet publish ClinicApp.sln -c Release -o publish
 
+    # Deploy via Web Deploy
     - name: Deploy via Web Deploy
       shell: pwsh
       run: |
@@ -35,20 +40,21 @@ jobs:
           SourcePath   = "publish"
         }
 
-        # Install Web Deploy if not installed
-        if (-not (Get-Command msdeploy -ErrorAction SilentlyContinue)) {
-          Write-Host "Installing Web Deploy..."
-          choco install webdeploy -y
+        $msdeployPath = "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe"
+
+        if (-Not (Test-Path $msdeployPath)) {
+          Write-Error "Web Deploy not found at $msdeployPath"
+          exit 1
         }
 
-        # Deploy the app
-        msdeploy.exe `
+        Write-Host "Deploying ClinicApp via Web Deploy..."
+        & $msdeployPath `
           -source:contentPath="$($publishSettings.SourcePath)" `
           -dest:contentPath="$($publishSettings.SiteName)",computerName="$($publishSettings.ComputerName)",userName="$($publishSettings.UserName)",password="$($publishSettings.Password)",authType="Basic" `
           -allowUntrusted
 
       env:
-        WEBDEPLOY_SERVER: ${{ secrets.WEBDEPLOY_SERVER }}   # e.g., https://yourserver:8172/msdeploy.axd
+        WEBDEPLOY_SERVER: ${{ secrets.WEBDEPLOY_SERVER }}   # e.g., https://yourhost:8172/msdeploy.axd
         WEBDEPLOY_USERNAME: ${{ secrets.WEBDEPLOY_USERNAME }}
         WEBDEPLOY_PASSWORD: ${{ secrets.WEBDEPLOY_PASSWORD }}
-        WEBDEPLOY_SITE: ${{ secrets.WEBDEPLOY_SITE }}       # Your MonsterASP.NET site name
+        WEBDEPLOY_SITE: ${{ secrets.WEBDEPLOY_SITE }}       # MonsterASP.NET site name
