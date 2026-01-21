@@ -22,7 +22,7 @@ jobs:
       run: dotnet restore
 
     - name: Build and publish
-      run: dotnet publish ./App.Presentation.csproj -c Release -o publish
+      run: dotnet publish ./ClinicApp.sln -c Release -o publish
 
     - name: Deploy via Web Deploy
       shell: pwsh
