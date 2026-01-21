@@ -1,0 +1,28 @@
+name: .NET CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Publish
+      run: dotnet publish App.Presentation/App.Presentation.csproj -c Release -o publish
+
+    - name: Deploy to IIS via Web Deploy
+      uses: microsoft/webapps-deploy@v2
+      with:
+        app-name: ${{ secrets.IIS_SITE_NAME }}
+        publish-profile: ${{ secrets.IIS_PUBLISH_PROFILE }}
+        package: publish

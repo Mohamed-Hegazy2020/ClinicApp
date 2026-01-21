@@ -1,0 +1,106 @@
+﻿@* model HomeDashboardModel *@
+@{
+    ViewData["Title"] = "Dashpoard";
+    Layout = "_AdminLayout";
+}
+<style>
+    .chart-title {
+        text-align: center;
+        font-size: small;
+    }
+</style>
+
+<div class="card">
+    <div class="card-header">
+        <h5><i class="fa fa-home"></i> @_Localization.GetLocalizedHtmlString("Dashboard")</h5>
+    </div>
+
+    <div class="card-body" style="padding:0">
+
+        <div class="row">
+            <div class="col-xl-3 col-md-6">
+                <div class="card mini-stat bg-primary text-white">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <div class="float-start mini-stat-img me-4">
+                                <img src="~/AdminLayout2/assets/images/services-icon/01.png" alt="">
+                            </div>
+                            <h5 class="font-size-22 text-uppercase text-white">عدد المرضي</h5>
+                            <h3 class="fw-medium font-size-26">
+                                50 <i class="mdi mdi-arrow-up text-success ms-2"></i>
+                            </h3>
+                        </div>
+                        <div class="pt-2">
+                            <div class="float-end">
+                                <a asp-controller="PurchasesInvoice" asp-action="Index" class="text-white"><i class="mdi mdi-arrow-right h3 text-white"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card mini-stat bg-primary text-white">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <div class="float-start mini-stat-img me-4">
+                                <img src="~/AdminLayout2/assets/images/services-icon/02.png" alt="">
+                            </div>
+                            <h5 class="font-size-22 text-uppercase text-white">عدد الموظفين</h5>
+                            <h3 class="fw-medium font-size-26">
+                                4 <i class="mdi mdi-arrow-down text-danger ms-2"></i>
+                            </h3>
+                        </div>
+                        <div class="pt-2">
+                            <div class="float-end">
+                                <a asp-controller="PurchasesReturn" asp-action="Index" class="text-white"><i class="mdi mdi-arrow-right h3 text-white"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card mini-stat bg-primary text-white">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <div class="float-start mini-stat-img me-4">
+                                <img src="~/AdminLayout2/assets/images/services-icon/03.png" alt="">
+                            </div>
+                            <h5 class="font-size-22 text-uppercase text-white">عدد كشف جديد</h5>
+                            <h3 class="fw-medium font-size-26">
+                                100 <i class="mdi mdi-arrow-up text-success ms-2"></i>
+                            </h3>
+                        </div>
+                        <div class="pt-2">
+                            <div class="float-end">
+                                <a asp-controller="SalesInvoice" asp-action="Index" class="text-white"><i class="mdi mdi-arrow-right h3 text-white"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card mini-stat bg-primary text-white">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <div class="float-start mini-stat-img me-4">
+                                <img src="~/AdminLayout2/assets/images/services-icon/04.png" alt="">
+                            </div>
+                            <h5 class="font-size-22 text-uppercase text-white">عدد كشف اعادة</h5>
+                            <h3 class="fw-medium font-size-26">
+                               55<i class="mdi mdi-arrow-down text-danger ms-2"></i>
+                            </h3>
+                        </div>
+                        <div class="pt-2">
+                            <div class="float-end">
+                                <a asp-controller="SalesReturn" asp-action="Index" class="text-white"><i class="mdi mdi-arrow-right h3 text-white"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>      
+        </div>
+    </div>
+
+
+

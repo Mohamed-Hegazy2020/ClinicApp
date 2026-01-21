@@ -117,14 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Code" xml:space="preserve">
+    <value>الكود</value>
+  </data>
+  <data name="NameAr" xml:space="preserve">
+    <value>الاسم العربي</value>
+  </data>
+  <data name="NameEn" xml:space="preserve">
+    <value>الاسم الإنجليزي</value>
+  </data>
   <data name="AddNew" xml:space="preserve">
     <value>جديد</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>رجوع</value>
-  </data>
-  <data name="Code" xml:space="preserve">
-    <value>الكود</value>
   </data>
   <data name="CreateNewLanguage" xml:space="preserve">
     <value>إضافة لغة</value>
@@ -141,16 +147,31 @@
   <data name="Languages" xml:space="preserve">
     <value>اللغات</value>
   </data>
-  <data name="NameAr" xml:space="preserve">
-    <value>الاسم العربي</value>
-  </data>
-  <data name="NameEn" xml:space="preserve">
-    <value>الاسم الإنجليزي</value>
-  </data>
   <data name="Save" xml:space="preserve">
     <value>حفظ</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>بحث</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>اسم المستخدم</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>تذكرني</value>
+  </data>
+  <data name="BasicDataMenuName" xml:space="preserve">
+    <value>البيانات الرئيسية</value>
+  </data>
+  <data name="TransDataMenuName" xml:space="preserve">
+    <value>الحركات</value>
+  </data>
+  <data name="ClinicData" xml:space="preserve">
+    <value>بيانات العيادة</value>
+  </data>
+  <data name="Main" xml:space="preserve">
+    <value>الرئيسية</value>
   </data>
 </root>

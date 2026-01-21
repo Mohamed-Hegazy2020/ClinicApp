@@ -1,5 +1,6 @@
 using App.Application.IServices;
 using App.Presentation.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,30 +16,15 @@ namespace App.Presentation.Controllers
             _IdentityService = identityService;
 
         }
+        [Authorize(Roles ="Admin,User")]
+        public IActionResult Dashpoard()
+        {
+            return View();
+        }
 
         public IActionResult Index()
         {
-            return View();
-            //if (TempData["NotificationMsg"]!=null)
-            //{
-            //    TempData.Keep("NotificationMsg");
-            //}
-            //if (_IdentityService.IsSignedInUser(User))
-            //{
-            //    if (User.IsInRole("Admin"))
-            //    {
-            //        return RedirectToAction("Index", "HomeAdmin");
-            //    }
-            //    else
-            //    {
-            //        return RedirectToAction("Index", "Home");
-            //    }
-            //}
-            //else
-            //{
-            //    return View();
-            //}
-
+            return View();           
 
         }
 

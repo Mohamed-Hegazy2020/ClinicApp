@@ -7,16 +7,16 @@
         {   
             new SideMenuItem()
             {
-                ItemTextLocalizationResource="BasicDataMenuName", Controler="",Action="",Data_Ds_Target="inventoryMenu",Icon="fa fa-store",ItemType=SideMenuItemType.MainMenu,
+                ItemTextLocalizationResource="BasicDataMenuName", Controler="",Action="",Data_Ds_Target="",Icon="fa fa-store",ItemType=SideMenuItemType.MainMenu,
                 ChaildsMenuItems=new List<SideMenuItem>()
                 {
                     new SideMenuItem()
                     {
-                        ItemTextLocalizationResource="Clinic", Controler="Clinic",Action="Index",Data_Ds_Target="",Icon="k-icon k-i-collapse",ItemType=SideMenuItemType.SubSubMenu
+                        ItemTextLocalizationResource="ClinicData", Controler="Clinic",Action="Index",Data_Ds_Target="",Icon="k-icon k-i-collapse",ItemType=SideMenuItemType.SubSubMenu
                     },
                     new SideMenuItem()
                     {
-                        ItemTextLocalizationResource="Languages", Controler="Language",Action="Index",Data_Ds_Target="",Icon="k-icon k-i-collapse",ItemType=SideMenuItemType.SubSubMenu
+                        ItemTextLocalizationResource="Users", Controler="Account",Action="UserList",Data_Ds_Target="",Icon="k-icon k-i-collapse",ItemType=SideMenuItemType.SubSubMenu
                     },
 
                 }
@@ -25,7 +25,7 @@
 
              new SideMenuItem()
             {
-                ItemTextLocalizationResource="TransDataMenuName", Controler="",Action="",Data_Ds_Target="inventoryMenu",Icon="fa fa-store",ItemType=SideMenuItemType.MainMenu,
+                ItemTextLocalizationResource="TransDataMenuName", Controler="",Action="",Data_Ds_Target="",Icon="fa fa-store",ItemType=SideMenuItemType.MainMenu,
                 ChaildsMenuItems=new List<SideMenuItem>()
                 {
                     //new SideMenuItem()

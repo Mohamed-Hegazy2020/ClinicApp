@@ -1,5 +1,6 @@
 ﻿using AutoMapper.Configuration.Annotations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace App.Presentation.Models.Identity
@@ -19,10 +20,13 @@ namespace App.Presentation.Models.Identity
         public override bool EmailConfirmed { get; set; }       
         public override string? NormalizedEmail { get; set; }      
         [ProtectedPersonalData]
+        [Required]
+        [Display(Name = "Email")]
         public override string? Email { get; set; }       
         public override string? NormalizedUserName { get; set; }      
         [ProtectedPersonalData]
         [Required]
+        [Display(Name = "UserName")]
         public override string? UserName { get; set; }      
         [PersonalData]
         public override int Id { get; set; }       
@@ -32,9 +36,20 @@ namespace App.Presentation.Models.Identity
         public string? Country { get; set; }
         [DataType(dataType:DataType.Password)]
         [Ignore]
+        [Display(Name = "Password")]
         public string Password { get; set; }
         [Ignore]
+        [Display(Name = "RememberMe")]
         public bool IsPersistent { get; set; }
+        [Required]
+        [Display(Name = "Roles")]
+        public List<string> SelectedRoles { get; set; }    
         
+        public IEnumerable<SelectListItem>? AvailableRoles { get; set; }
+        public ApplicationUserModel()
+        {
+            SelectedRoles = new List<string>();
+            AvailableRoles =new List<SelectListItem>();
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace App.Application.IServices
     public interface IidentityService
     {
         //user
-        public Task<string> AddUserAsync(ApplicationUser user,List<ApplicationRole> roles, string password);   
+        public Task<IdentityResultModel> AddUserAsync(ApplicationUser user,List<ApplicationRole> roles, string password);   
         Task<IEnumerable<ApplicationUser>> GetAllUsersAsync();
         Task<ApplicationUser> GetUserByEmailAsync(string email);
         Task<ApplicationUser> GetUserByIdAsync(int id);
@@ -36,7 +36,7 @@ namespace App.Application.IServices
         //Roles
         public Task<string> AddRoleAsync(ApplicationRole role);
         public Task UpdateRoleAsync(ApplicationRole role);
-        Task<IEnumerable<string>> GetAllRolesAsync();
+        Task<IEnumerable<ApplicationRole>> GetAllRolesAsync();
         Task DeleteRoleAsync(string roleName);
 
     }

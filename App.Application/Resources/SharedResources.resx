@@ -126,4 +126,52 @@
   <data name="NameEn" xml:space="preserve">
     <value>NameEn</value>
   </data>
+  <data name="AddNew" xml:space="preserve">
+    <value>AddNew</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="CreateNewLanguage" xml:space="preserve">
+    <value>CreateNewLanguage</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="EditLanguage" xml:space="preserve">
+    <value>EditLanguage</value>
+  </data>
+  <data name="Languages" xml:space="preserve">
+    <value>Languages</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>UserName</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>RememberMe</value>
+  </data>
+  <data name="BasicDataMenuName" xml:space="preserve">
+    <value>BasicDataMenuName</value>
+  </data>
+  <data name="TransDataMenuName" xml:space="preserve">
+    <value>TransDataMenuName</value>
+  </data>
+  <data name="ClinicData" xml:space="preserve">
+    <value>ClinicData</value>
+  </data>
+  <data name="Main" xml:space="preserve">
+    <value>Main</value>
+  </data>
 </root>

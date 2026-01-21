@@ -32,43 +32,60 @@ namespace App.Application.Services
 
         #region Users
 
-        public async Task<string> AddUserAsync(ApplicationUser user, List<ApplicationRole> roles, string password)
+        public async Task<IdentityResultModel> AddUserAsync(ApplicationUser user, List<ApplicationRole> roles, string password)
         {
             var trans = await _dbContext.Database.BeginTransactionAsync();
+            IdentityResultModel result = new IdentityResultModel();
+
             try
             {
                 //if email is exist
                 var existuser = await _userManager.FindByEmailAsync(user.Email);
                 //email is exist
                 if (existuser != null)
-                    return "EmailIsExist";
+                {
+                    result.Message = "The user is aredy exist";
+                    return result;
+                }
 
                 //if username is exist
                 var userByUserName = await _userManager.FindByNameAsync(user.UserName);
                 //username is exist
                 if (userByUserName != null)
-                    return "UserNameIsExist";
+                {
+                    result.Message = "UserNameIsExist";
+                    return result;
+                }
+                   
 
                 //create
                 var CreateResult = await _userManager.CreateAsync(user, password);
                 //failed
                 if (!CreateResult.Succeeded)
-                    return string.Join(",", CreateResult.Errors.Select(x => x.Description).ToList());
+                {
+                    result.Message = string.Join(",", CreateResult.Errors.Select(x => x.Description).ToList());                    
+                    return result;
+                }
                 //message
 
                 if (roles == null || roles.Count <= 0)
-                    return "SelectUserRoles";
+                {
+                    result.Message = "SelectUserRoles";
+                    return result;
+                }
 
                 var userRoles = roles.Select(x => x.Name);
                 await _userManager.AddToRolesAsync(user, userRoles);
                 await _dbContext.SaveChangesAsync();
                 await trans.CommitAsync();
-                return "Success";
+                result.Message = "user created";
+                result.Succeeded = CreateResult.Succeeded;
+                return result;
             }
             catch (Exception ex)
             {
                 await trans.RollbackAsync();
-                return "Failed";
+                return result;
             }
 
 
@@ -87,9 +104,18 @@ namespace App.Application.Services
             return "Failed";
         }
 
-        public Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var users = await _userManager.Users.ToListAsync();
+                return users;   
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public Task<ApplicationUser> GetUserByEmailAsync(string email)
@@ -157,59 +183,24 @@ namespace App.Application.Services
             }
         }
 
-        public async Task<IdentityResultModel> LoginAsync(ApplicationUser user, string Password, bool IsPersisten)
+        public async Task<IdentityResultModel> LoginAsync(ApplicationUser user, string password, bool isPersistent)
         {
-            IdentityResultModel result = new IdentityResultModel();
-            try
+            var result = new IdentityResultModel();
+            var r = await _signInManager.PasswordSignInAsync(user.UserName, password,isPersistent,lockoutOnFailure: false);
+
+            if (r.Succeeded)
             {
-                var curuntUser =await _userManager.FindByNameAsync(user.UserName);
-                if (curuntUser!=null)
-                {
-                    bool isPasswordFound = await _userManager.CheckPasswordAsync(curuntUser, Password);
-                    if (isPasswordFound)
-                    {                               
-
-                        var r = await _signInManager.PasswordSignInAsync(user.UserName, Password, IsPersisten, false);
-                        if (r.Succeeded)
-                        {
-                            result.Succeeded = true;
-                            result.Message = "Loged in successfully";
-                        }
-                        else if (r.IsNotAllowed)
-                        {
-                            result.Message = "IsNotAllowed";
-                        }
-                        else if (r.IsLockedOut)
-                        {
-                            result.Message = "IsLockedOut";
-                        }
-                        else if (r.IsNotAllowed)
-                        {
-                            result.Message = "IsNotAllowed";
-                        }
-                    }
-                    else
-                    {
-                        result.Message = "In valide password";
-
-                    }
-
-                }
-                else
-                {
-                    result.Message = "The user not found";
-
-                }                
-
-                return result;
+                result.Succeeded = true;
+                result.Message = "Logged in successfully";
             }
-            catch (Exception)
-            {
-                result.Message = "Erorr";
-                return result;
+            else if (r.IsLockedOut)
+                result.Message = "IsLockedOut";
+            else if (r.IsNotAllowed)
+                result.Message = "IsNotAllowed";
+            else
+                result.Message = "Invalid login";
 
-            }
-
+            return result;
         }
 
 
@@ -223,9 +214,10 @@ namespace App.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<string>> GetAllRolesAsync()
+        public async Task<IEnumerable<ApplicationRole>> GetAllRolesAsync()
         {
-            throw new NotImplementedException();
+            var roles =await _roleManager.Roles.ToListAsync();
+            return roles;
         }
 
         public Task DeleteRoleAsync(string roleName)

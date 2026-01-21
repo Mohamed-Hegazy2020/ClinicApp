@@ -1,0 +1,134 @@
+﻿@using App.Presentation.Models.Identity
+@model ApplicationUserModel
+@{
+    ViewData["Title"] = "Add New User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-3">
+    <div class="card shadow-lg border-0">
+        <form asp-action="AddUser" method="post">
+            <div class="buttonsbox d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fa fa-user-plus"></i>
+                    @_Localization.GetLocalizedHtmlString("CreateNewUser")
+                </h5>
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+                        <button type="submit" class="btn btn-success me-2">
+                            <i class="fas fa-check"></i>
+                            @_Localization.GetLocalizedHtmlString("Save")
+                        </button>
+                        <a asp-action="AddUser" class="btn btn-primary me-2">
+                            <i class="fas fa-plus"></i>
+                            @_Localization.GetLocalizedHtmlString("CreateNew")
+                        </a>
+
+                        <!-- Delete -->
+                        @*     <a asp-action="DeleteUser" asp-route-id="@Model.Id"
+                   class="btn btn-danger"
+                   onclick="return confirm('@_Localization.GetLocalizedHtmlString("ConfirmDelete")')">
+                    <i class="fas fa-trash"></i>
+                    @_Localization.GetLocalizedHtmlString("Delete")
+                </a> *@
+                    </div>
+
+                    <div>
+                        <a asp-action="UserList" class="btn btn-info">
+                            <i class="fas fa-th-list"></i>
+                            @_Localization.GetLocalizedHtmlString("BackToList")
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="card-body">
+               @*  <div asp-validation-summary="All" class="alert alert-danger" style="display:block"></div> *@
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="UserName" class="form-label"></label>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">@_Localization.GetLocalizedHtmlString("Role")</label>
+                 @*        <select asp-for="SelectedRoles"
+                                asp-items="Model.AvailableRoles"
+                                class="select2"
+                                multiple>
+                        </select> *@
+                        <select id="SelectedRoles" name="SelectedRoles" multiple>
+                            @foreach (var role in Model.AvailableRoles)
+                            {
+                                <option value="@role.Value" selected="@(Model.SelectedRoles.Contains(role.Value) ? "selected" : null)">
+                                    @role.Text
+                                </option>
+                            }
+                        </select>
+
+                        <span asp-validation-for="SelectedRoles" class="text-danger"></span>
+                    </div> 
+                    
+                </div>
+
+            </div>
+
+           
+
+        </form>
+
+    </div>
+</div>
+
+<style>
+    .select2-container--default .select2-selection--multiple {
+        border: 1px solid #ced4da !important; /* Bootstrap border */
+        border-radius: 0.375rem; /* Bootstrap radius */
+        min-height: 38px; /* Bootstrap height */
+        padding: 4px 6px;
+    }
+
+    .select2-container--default.select2-container--focus
+    .select2-selection--multiple {
+        border-color: #86b7fe !important;
+        box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+    }
+</style>
+
+
+@section Scripts {
+    <script>
+             $(document).ready(function () {
+
+          $("#SelectedRoles").kendoMultiSelect({
+            placeholder: "@_Localization.GetLocalizedHtmlString("Select")",
+            dataTextField: "text",
+            dataValueField: "value",
+            autoClose: false
+        });
+
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}
+
+

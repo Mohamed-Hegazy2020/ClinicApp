@@ -16,6 +16,11 @@ namespace App.Presentation.Extentions
         public static IServiceCollection AddPresentationServicesRegistration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromDays(30);   // How long RememberMe lasts
+                options.SlidingExpiration = true;                 // Refresh cookie on activity
+            });
 
             services.AddIdentity<ApplicationUser, ApplicationRole>
                 (options =>
