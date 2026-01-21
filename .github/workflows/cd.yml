@@ -3,14 +3,14 @@ name: CI/CD - Deploy ClinicApp to MonsterASP.NET
 on:
   push:
     branches:
-      - main  # Deploy when pushing to main branch
+      - main  # Deploy on push to main branch
 
 jobs:
   build-and-deploy:
     runs-on: windows-latest
 
     steps:
-    # 1Checkout repository
+    # 1️Checkout repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
@@ -34,11 +34,11 @@ jobs:
       run: |
         # Setup deployment variables
         $publishSettings = @{
-          ComputerName = $Env:WEBDEPLOY_SERVER
-          UserName     = $Env:WEBDEPLOY_USERNAME
-          Password     = $Env:WEBDEPLOY_PASSWORD
-          SiteName     = $Env:WEBDEPLOY_SITE
-          SourcePath   = "publish"
+            ComputerName = $Env:WEBDEPLOY_SERVER
+            UserName     = $Env:WEBDEPLOY_USERNAME
+            Password     = $Env:WEBDEPLOY_PASSWORD
+            SiteName     = $Env:WEBDEPLOY_SITE
+            SourcePath   = "publish"
         }
 
         # Path to msdeploy.exe
@@ -46,18 +46,22 @@ jobs:
 
         # Check if msdeploy exists
         if (-Not (Test-Path $msdeployPath)) {
-          Write-Error "Web Deploy not found at $msdeployPath"
-          exit 1
+            Write-Error "Web Deploy not found at $msdeployPath"
+            exit 1
         }
 
         Write-Host "Deploying ClinicApp via Web Deploy..."
-        
-        # Run Web Deploy
-        & $msdeployPath `
-          -source "contentPath=$($publishSettings.SourcePath)" `
-          -dest "contentPath=$($publishSettings.SiteName),computerName=$($publishSettings.ComputerName),userName=$($publishSettings.UserName),password=$($publishSettings.Password),authType=Basic" `
-          -verb:sync `
-          -allowUntrusted
+
+        # Build msdeploy arguments as array (reliable in PowerShell)
+        $msdeployArgs = @(
+            "-source", "contentPath=$($publishSettings.SourcePath)"
+            "-dest", "contentPath=$($publishSettings.SiteName),computerName=$($publishSettings.ComputerName),userName=$($publishSettings.UserName),password=$($publishSettings.Password),authType=Basic"
+            "-verb:sync"
+            "-allowUntrusted"
+        )
+
+        # Run msdeploy
+        & $msdeployPath @msdeployArgs
       env:
         WEBDEPLOY_SERVER: ${{ secrets.WEBDEPLOY_SERVER }}
         WEBDEPLOY_USERNAME: ${{ secrets.WEBDEPLOY_USERNAME }}
