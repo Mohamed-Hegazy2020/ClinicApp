@@ -3,7 +3,7 @@ name: CI/CD - Deploy ClinicApp to MonsterASP.NET
 on:
   push:
     branches:
-      - main  # Deploy on push to main branch
+      - main
 
 jobs:
   build-and-deploy:
@@ -32,19 +32,8 @@ jobs:
     - name: Deploy via Web Deploy
       shell: pwsh
       run: |
-        # Setup deployment variables
-        $publishSettings = @{
-            ComputerName = $Env:WEBDEPLOY_SERVER
-            UserName     = $Env:WEBDEPLOY_USERNAME
-            Password     = $Env:WEBDEPLOY_PASSWORD
-            SiteName     = $Env:WEBDEPLOY_SITE
-            SourcePath   = "publish"
-        }
-
-        # Path to msdeploy.exe
         $msdeployPath = "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe"
 
-        # Check if msdeploy exists
         if (-Not (Test-Path $msdeployPath)) {
             Write-Error "Web Deploy not found at $msdeployPath"
             exit 1
@@ -52,15 +41,15 @@ jobs:
 
         Write-Host "Deploying ClinicApp via Web Deploy..."
 
-        # Build msdeploy arguments as array (reliable in PowerShell)
+        # Build arguments array using secrets directly
         $msdeployArgs = @(
-            "-source", "contentPath=$($publishSettings.SourcePath)"
-            "-dest", "contentPath=$($publishSettings.SiteName),computerName=$($publishSettings.ComputerName),userName=$($publishSettings.UserName),password=$($publishSettings.Password),authType=Basic"
+            "-source", "contentPath=publish"
+            "-dest", "contentPath=${Env:WEBDEPLOY_SITE},computerName=${Env:WEBDEPLOY_SERVER},userName=${Env:WEBDEPLOY_USERNAME},password=${Env:WEBDEPLOY_PASSWORD},authType=Basic"
             "-verb:sync"
             "-allowUntrusted"
         )
 
-        # Run msdeploy
+        # Run Web Deploy
         & $msdeployPath @msdeployArgs
       env:
         WEBDEPLOY_SERVER: ${{ secrets.WEBDEPLOY_SERVER }}
