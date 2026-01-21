@@ -1,28 +1,54 @@
-name: .NET CD
+name: Deploy ASP.NET Core to MonsterASP.NET via Web Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main   # Deploy on push to main branch
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '7.0.x' # Use your project .NET version
 
-    - name: Publish
-      run: dotnet publish App.Presentation/App.Presentation.csproj -c Release -o publish
+    - name: Restore dependencies
+      run: dotnet restore
 
-    - name: Deploy to IIS via Web Deploy
-      uses: microsoft/webapps-deploy@v2
-      with:
-        app-name: ${{ secrets.IIS_SITE_NAME }}
-        publish-profile: ${{ secrets.IIS_PUBLISH_PROFILE }}
-        package: publish
+    - name: Build and publish
+      run: dotnet publish ./YourProject.csproj -c Release -o publish
+
+    - name: Deploy via Web Deploy
+      shell: pwsh
+      run: |
+        $publishSettings = @{
+          ComputerName = $Env:WEBDEPLOY_SERVER
+          UserName     = $Env:WEBDEPLOY_USERNAME
+          Password     = $Env:WEBDEPLOY_PASSWORD
+          SiteName     = $Env:WEBDEPLOY_SITE
+          SourcePath   = "publish"
+        }
+
+        # Install Web Deploy if not installed
+        if (-not (Get-Command msdeploy -ErrorAction SilentlyContinue)) {
+          Write-Host "Installing Web Deploy..."
+          choco install webdeploy -y
+        }
+
+        # Deploy the app
+        msdeploy.exe `
+          -source:contentPath="$($publishSettings.SourcePath)" `
+          -dest:contentPath="$($publishSettings.SiteName)",computerName="$($publishSettings.ComputerName)",userName="$($publishSettings.UserName)",password="$($publishSettings.Password)",authType="Basic" `
+          -allowUntrusted
+
+      env:
+        WEBDEPLOY_SERVER: ${{ secrets.WEBDEPLOY_SERVER }}   # e.g., https://yourserver:8172/msdeploy.axd
+        WEBDEPLOY_USERNAME: ${{ secrets.WEBDEPLOY_USERNAME }}
+        WEBDEPLOY_PASSWORD: ${{ secrets.WEBDEPLOY_PASSWORD }}
+        WEBDEPLOY_SITE: ${{ secrets.WEBDEPLOY_SITE }}       # Your MonsterASP.NET site name
