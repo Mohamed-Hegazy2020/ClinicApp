@@ -1,16 +1,16 @@
-name: Deploy ClinicApp to MonsterASP.NET via Web Deploy
+name: CI/CD - Deploy ClinicApp to MonsterASP.NET
 
 on:
   push:
     branches:
-      - main   # Trigger deployment on push to main branch
+      - main  # Trigger deployment on push to main branch
 
 jobs:
   build-and-deploy:
     runs-on: windows-latest
 
     steps:
-    # Checkout code
+    # Checkout repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
@@ -18,7 +18,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'  # Adjust to your .NET version
+        dotnet-version: '7.0.x'  # Change to your .NET version
 
     # Restore NuGet packages
     - name: Restore dependencies
@@ -49,10 +49,9 @@ jobs:
 
         Write-Host "Deploying ClinicApp via Web Deploy..."
         & $msdeployPath `
-          -source:contentPath="$($publishSettings.SourcePath)" `
-          -dest:contentPath="$($publishSettings.SiteName)",computerName="$($publishSettings.ComputerName)",userName="$($publishSettings.UserName)",password="$($publishSettings.Password)",authType="Basic" `
+          -source "contentPath=$($publishSettings.SourcePath)" `
+          -dest "contentPath=$($publishSettings.SiteName),computerName=$($publishSettings.ComputerName),userName=$($publishSettings.UserName),password=$($publishSettings.Password),authType=Basic" `
           -allowUntrusted
-
       env:
         WEBDEPLOY_SERVER: ${{ secrets.WEBDEPLOY_SERVER }}   # e.g., https://yourhost:8172/msdeploy.axd
         WEBDEPLOY_USERNAME: ${{ secrets.WEBDEPLOY_USERNAME }}
