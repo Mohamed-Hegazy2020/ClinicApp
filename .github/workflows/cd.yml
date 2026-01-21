@@ -32,4 +32,4 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         protocol: ftps
         local-dir: publish/
-        server-dir: /
+        server-dir: /wwwroot
