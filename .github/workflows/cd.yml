@@ -10,47 +10,36 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    # 1️Checkout repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # 2️Setup .NET SDK
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'  # Adjust to your .NET version
+        dotnet-version: '8.0.x'   # change if needed
 
-    # 3️Restore NuGet packages
-    - name: Restore dependencies
+    - name: Restore solution
       run: dotnet restore ClinicApp.sln
 
-    # 4️Build & publish the solution
-    - name: Build and publish
-      run: dotnet publish ClinicApp.sln -c Release -o publish
+    - name: Publish web project
+      run: dotnet publish App.Presentation/App.Presentation.csproj -c Release -o publish
 
-    # 5️Deploy via Web Deploy
-    - name: Deploy via Web Deploy
+    - name: Deploy to MonsterASP.NET via Web Deploy
       shell: pwsh
       run: |
-        $msdeployPath = "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe"
+        $msdeploy = "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe"
 
-        if (-Not (Test-Path $msdeployPath)) {
-            Write-Error "Web Deploy not found at $msdeployPath"
-            exit 1
+        if (!(Test-Path $msdeploy)) {
+          throw "msdeploy.exe not found"
         }
 
-        Write-Host "Deploying ClinicApp via Web Deploy..."
+        Write-Host "Deploying to MonsterASP.NET..."
 
-        # Build arguments array using secrets directly
-        $msdeployArgs = @(
-            "-source", "contentPath=publish"
-            "-dest", "contentPath=${Env:WEBDEPLOY_SITE},computerName=${Env:WEBDEPLOY_SERVER},userName=${Env:WEBDEPLOY_USERNAME},password=${Env:WEBDEPLOY_PASSWORD},authType=Basic"
-            "-verb:sync"
-            "-allowUntrusted"
-        )
-
-        # Run Web Deploy
-        & $msdeployPath @msdeployArgs
+        & $msdeploy `
+          "-verb:sync" `
+          "-source:contentPath=publish" `
+          "-dest:contentPath=$Env:WEBDEPLOY_SITE,computerName=$Env:WEBDEPLOY_SERVER,userName=$Env:WEBDEPLOY_USERNAME,password=$Env:WEBDEPLOY_PASSWORD,authType=Basic" `
+          "-allowUntrusted"
       env:
         WEBDEPLOY_SERVER: ${{ secrets.WEBDEPLOY_SERVER }}
         WEBDEPLOY_USERNAME: ${{ secrets.WEBDEPLOY_USERNAME }}
