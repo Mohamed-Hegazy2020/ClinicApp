@@ -10,18 +10,17 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout
       uses: actions/checkout@v3
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0.x'   # change if needed
+      with: dotnet-version: '8.0.x'   # change if your project uses different version
 
-    - name: Restore solution
+    - name: Restore
       run: dotnet restore ClinicApp.sln
 
-    - name: Publish web project
+    - name: Publish Web Project
       run: dotnet publish App.Presentation/App.Presentation.csproj -c Release -o publish
 
     - name: Deploy to MonsterASP.NET via Web Deploy
