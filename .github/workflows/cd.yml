@@ -3,65 +3,43 @@ name: CI/CD - Deploy ClinicApp to MonsterASP.NET
 on:
   push:
     branches:
-      - main  # Deploy on push to main branch
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: windows-latest
 
     steps:
-    # 1️⃣ Checkout repository
-    - name: Checkout repository
+    - name: Checkout
       uses: actions/checkout@v3
 
-    # 2️⃣ Setup .NET SDK
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'  # Adjust to your .NET version
+        dotnet-version: '8.0.x'   # change if your project uses different version
 
-    # 3️⃣ Restore NuGet packages
-    - name: Restore dependencies
+    - name: Restore
       run: dotnet restore ClinicApp.sln
 
-    # 4️⃣ Build & publish the solution
-    - name: Build and publish
-      run: dotnet publish ClinicApp.sln -c Release -o publish
+    - name: Publish Web Project
+      run: dotnet publish App.Presentation/App.Presentation.csproj -c Release -o publish
 
-    # 5️⃣ Deploy via Web Deploy
-    - name: Deploy via Web Deploy
+    - name: Deploy to MonsterASP.NET via Web Deploy
       shell: pwsh
       run: |
-        # Setup deployment variables
-        $publishSettings = @{
-            ComputerName = $Env:WEBDEPLOY_SERVER
-            UserName     = $Env:WEBDEPLOY_USERNAME
-            Password     = $Env:WEBDEPLOY_PASSWORD
-            SiteName     = $Env:WEBDEPLOY_SITE
-            SourcePath   = "publish"
+        $msdeploy = "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe"
+
+        if (!(Test-Path $msdeploy)) {
+          throw "msdeploy.exe not found"
         }
 
-        # Path to msdeploy.exe
-        $msdeployPath = "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe"
+        Write-Host "Deploying to MonsterASP.NET..."
 
-        # Check if msdeploy exists
-        if (-Not (Test-Path $msdeployPath)) {
-            Write-Error "Web Deploy not found at $msdeployPath"
-            exit 1
-        }
-
-        Write-Host "Deploying ClinicApp via Web Deploy..."
-
-        # Build msdeploy arguments as array (reliable in PowerShell)
-        $msdeployArgs = @(
-            "-source", "contentPath=$($publishSettings.SourcePath)"
-            "-dest", "contentPath=$($publishSettings.SiteName),computerName=$($publishSettings.ComputerName),userName=$($publishSettings.UserName),password=$($publishSettings.Password),authType=Basic"
-            "-verb:sync"
-            "-allowUntrusted"
-        )
-
-        # Run msdeploy
-        & $msdeployPath @msdeployArgs
+        & $msdeploy `
+          "-verb:sync" `
+          "-source:contentPath=publish" `
+          "-dest:contentPath=$Env:WEBDEPLOY_SITE,computerName=$Env:WEBDEPLOY_SERVER,userName=$Env:WEBDEPLOY_USERNAME,password=$Env:WEBDEPLOY_PASSWORD,authType=Basic" `
+          "-allowUntrusted"
       env:
         WEBDEPLOY_SERVER: ${{ secrets.WEBDEPLOY_SERVER }}
         WEBDEPLOY_USERNAME: ${{ secrets.WEBDEPLOY_USERNAME }}
