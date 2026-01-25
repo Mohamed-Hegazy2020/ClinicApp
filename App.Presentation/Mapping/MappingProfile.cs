@@ -11,8 +11,24 @@ namespace App.Presentation.Mapping
         public MappingProfile()
         {
             CreateMap<Clinic, ClinicModel>().ReverseMap();
-            CreateMap<ApplicationUser, ApplicationUserModel>().ReverseMap();
-      
-        }
-    }
+            // Entity → ViewModel
+            CreateMap<ApplicationUser, ApplicationUserModel>()
+                .ForMember(dest => dest.SelectedRoles, opt => opt.Ignore())
+                .ForMember(dest => dest.RolesDisplay, opt => opt.Ignore()); // ignore for ViewModel display
+
+            // ViewModel → Entity
+            CreateMap<ApplicationUserModel, ApplicationUser>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+                .ForMember(dest => dest.SecurityStamp, opt => opt.Ignore())
+                .ForMember(dest => dest.NormalizedUserName, opt => opt.Ignore())
+                .ForMember(dest => dest.NormalizedEmail, opt => opt.Ignore())
+                .ForMember(dest => dest.ConcurrencyStamp, opt => opt.Ignore());
+
+			CreateMap<Patient, PatientModel>().ReverseMap();
+		
+
+
+		}
+	}
 }

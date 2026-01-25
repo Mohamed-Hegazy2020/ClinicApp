@@ -1,0 +1,128 @@
+﻿@model ClinicModel
+@{
+    ViewData["Title"] = "Add New Clinic";
+}
+
+<div class="container mt-3">
+    <div class="card shadow-lg border-0">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="buttonsbox d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fa fa-user-plus"></i>
+                    @_Localization.GetLocalizedHtmlString("CreateNewClinic")
+                </h5>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="fas fa-check"></i>
+                        @_Localization.GetLocalizedHtmlString("Save")
+                    </button>
+                   @*<a asp-action="Create" class="btn btn-primary me-2">
+                        <i class="fas fa-plus"></i>
+                        @_Localization.GetLocalizedHtmlString("CreateNew")
+                    </a>*@
+                    <a asp-action="List" class="btn btn-info me-2">
+                        <i class="fas fa-th-list"></i>
+                        @_Localization.GetLocalizedHtmlString("BackToList")
+                    </a>
+
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="card-body">
+                @*  <div asp-validation-summary="All" class="alert alert-danger" style="display:block"></div> *@
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="col-md-8 mb-3">
+                            <label asp-for="NameAr" class="form-label"></label>
+                            <input asp-for="NameAr" class="form-control" />
+                            <span asp-validation-for="NameAr" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label asp-for="DoctorName" class="form-label"></label>
+                            <input asp-for="DoctorName" class="form-control" />
+                            <span asp-validation-for="DoctorName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label asp-for="Mobile1" class="form-label"></label>
+                            <input asp-for="Mobile1" class="form-control" />
+                            <span asp-validation-for="Mobile1" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label asp-for="Mobile2" class="form-label"></label>
+                            <input asp-for="Mobile2" class="form-control" />
+                            <span asp-validation-for="Mobile2" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label asp-for="Phone" class="form-label"></label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label asp-for="Fax" class="form-label"></label>
+                            <input asp-for="Fax" class="form-control" />
+                            <span asp-validation-for="Fax" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label asp-for="Address" class="form-label"></label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label asp-for="WorkTimes" class="form-label"></label>
+                            <input asp-for="WorkTimes" class="form-control" />
+                            <span asp-validation-for="WorkTimes" class="text-danger"></span>
+                        </div>
+                    </div>
+
+
+                      
+                    <div class="col-md-4">
+                        <img id="Image" class="img-thumbnail w-100 h-100" src="~/Images/@Model.ImagePath" style="max-height:200px;">
+                        <label for="ImageFile" class="custom-file-upload w-100 text-center form-control mt-2">
+                            <i class="fas fa-cloud-upload-alt"></i> @_Localization.GetLocalizedHtmlString("ItemImageFile")
+                        </label>
+                        <input type="file" id="ImageFile" name="ImageFile" asp-for="ImageFile" accept="image/*" class="form-control d-none" />
+                    </div>
+
+                </div>
+              
+
+
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#Image').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $(document).ready(function () {
+
+            $("#ImageFile").change(function () {
+                readURL(this);
+            });
+
+        });
+
+    </script>
+
+
+    <partial name="_ValidationScriptsPartial" />
+}
+
+

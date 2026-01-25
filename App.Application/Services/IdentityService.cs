@@ -92,6 +92,13 @@ namespace App.Application.Services
 
         }
 
+
+        public async Task<IList<string>> GetUserRolesAsync(ApplicationUser user)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+            return roles;
+        }   
+
         #endregion
 
 
@@ -118,32 +125,87 @@ namespace App.Application.Services
             }
         }
 
-        public Task<ApplicationUser> GetUserByEmailAsync(string email)
+        public async Task<List<ApplicationUserWithRoles>> GetAllUsersWithRolesAsync()
+        {
+            // Join AspNetUsers -> AspNetUserRoles -> AspNetRoles in one query
+            var usersWithRolesQuery = from user in _dbContext.Users
+                                      join userRole in _dbContext.UserRoles
+                                          on user.Id equals userRole.UserId into ur
+                                      from userRole in ur.DefaultIfEmpty()
+                                      join role in _dbContext.Roles
+                                          on userRole.RoleId equals role.Id into r
+                                      from role in r.DefaultIfEmpty()
+                                      select new
+                                      {
+                                          User = user,
+                                          RoleName = role != null ? role.Name : null
+                                      };
+
+            var usersWithRolesList = await usersWithRolesQuery
+                .AsNoTracking()
+                .ToListAsync();
+
+            // Group roles by user
+            var grouped = usersWithRolesList
+                .GroupBy(x => x.User.Id)
+                .Select(g => new ApplicationUserWithRoles
+                {
+                    User = g.First().User,
+                    Roles = g.Where(x => x.RoleName != null).Select(x => x.RoleName!).ToList()
+                })
+                .ToList();
+
+            return grouped;
+        }
+
+        public async Task<ApplicationUser> GetUserByEmailAsync(string email)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ApplicationUser> GetUserByIdAsync(int id)
+        public async Task<ApplicationUser> GetUserByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            return user;
         }
 
         public async Task<ApplicationUser> GetUserByNameAsync(string userName)
         {
-            var userByUserName = await _userManager.FindByNameAsync(userName);
-            return userByUserName;
+            var user = await _userManager.FindByNameAsync(userName);
+            return user;
 
         }
 
-        public Task UpdateUserAsync(int id, ApplicationUser user)
+        public async Task UpdateUserAsync(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            // Update the user
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                // Collect all errors and throw exception
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Failed to update user: {errors}");
+            }
         }
 
-        public Task DeleteUserAsync(string id)
+
+        public async Task DeleteUserAsync(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            if (user == null) 
+                throw new ArgumentNullException(nameof(user));
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Failed to delete user: {errors}");
+            }
         }
+
 
         public async Task<IdentityResultModel> RegisterAsync(ApplicationUser user,string Password,bool IsPersistent)
         {
@@ -229,7 +291,36 @@ namespace App.Application.Services
             var IsSignedInUser = _signInManager.IsSignedIn(principal);
             return IsSignedInUser;
         }
-        #endregion
 
+        public async Task AddUserToRolesAsync(ApplicationUser user, List<string> roles)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (roles == null || !roles.Any()) return;
+
+            var result = await _userManager.AddToRolesAsync(user, roles);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Failed to add roles: {errors}");
+            }
+        }
+
+        public async Task RemoveUserFromRolesAsync(ApplicationUser user, List<string> roles)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (roles == null || !roles.Any()) return;
+
+            var result = await _userManager.RemoveFromRolesAsync(user, roles);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Failed to remove roles: {errors}");
+            }
+        }
     }
+    #endregion
+
 }
+

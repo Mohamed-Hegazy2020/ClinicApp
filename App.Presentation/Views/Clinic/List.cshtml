@@ -1,24 +1,26 @@
-﻿@using App.Presentation.Models.Identity
-@model IEnumerable<ApplicationUserModel>
+﻿@model IEnumerable<ClinicModel>
 @{
-    ViewData["Title"] = "UsersList";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "ClinicsList";
+    //Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="container mt-3">
     <div class="card shadow-lg border-0">
         <div class="card-body">
-            <form asp-action="UserList" method="get" class="mb-3">
+            <form asp-action="List" method="get" class="mb-3">
                 <div class="buttonsbox d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="fa fa-users"></i>
-                        @_Localization.GetLocalizedHtmlString("UsersList")
+                        @_Localization.GetLocalizedHtmlString("ClinicsList")
                     </h5>
-
-                    <a asp-action="AddUser" class="btn btn-success">
-                        <i class="fa fa-user-plus"></i>
-                        @_Localization.GetLocalizedHtmlString("CreateNew")
-                    </a>
+                    @if (ViewBag.AllowAddNew)
+                    {
+                        <a asp-action="Create" class="btn btn-success">
+                            <i class="fa fa-Clinic-plus"></i>
+                            @_Localization.GetLocalizedHtmlString("CreateNew")
+                        </a>
+                    }
+                    
                 </div>
                 <div class="clearfix"></div>
 
@@ -36,10 +38,11 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead class="table-dark">
                         <tr>
-                            <th>#</th>
-                            <th>@_Localization.GetLocalizedHtmlString("UserName")</th>
-                            <th>@_Localization.GetLocalizedHtmlString("Email")</th>
-                            <th>@_Localization.GetLocalizedHtmlString("Role")</th>
+                            <th>#</th>                            
+                            <th>@_Localization.GetLocalizedHtmlString("NameAr")</th>
+                            <th>@_Localization.GetLocalizedHtmlString("Mobile")</th>
+                            <th>@_Localization.GetLocalizedHtmlString("PhoneNumber")</th>
+                            <th>@_Localization.GetLocalizedHtmlString("DoctorName")</th>
                             <th class="text-end">@_Localization.GetLocalizedHtmlString("Actions")</th>
                         </tr>
                     </thead>
@@ -48,29 +51,28 @@
                         @if (Model != null && Model.Any())
                         {
                             int i = 1;
-                            foreach (var user in Model)
+                            foreach (var Clinic in Model)
                             {
                                 <tr>
-                                    <td>@i</td>
-                                    <td>@user.UserName</td>
-                                    <td>@user.Email</td>
-                                    <td>
-                                        @user.RolesDisplay
-                                    </td>
+                                    <td>@i</td>                                   
+                                    <td>@Clinic.NameAr</td>
+                                    <td>@Clinic.Mobile1</td>
+                                    <td>@Clinic.Phone</td>
+                                    <td>@Clinic.DoctorName</td>
 
                                     <td class="text-end">
-                                        <div class="d-inline-flex gap-1">   
-                                            <a asp-action="EditUser" asp-route-id="@user.Id"
+                                        <div class="d-inline-flex gap-1">
+                                            <a asp-action="Edit" asp-route-id="@Clinic.Id"
                                                class="btn btn-info btn-sm">
                                                 <i class="fa fa-edit"></i>
                                                 @_Localization.GetLocalizedHtmlString("Edit")
                                             </a>
-                                            <a asp-action="DeleteUser" asp-route-id="@user.Id"
+                                         @* <a asp-action="Delete" asp-route-id="@Clinic.Id"
                                                class="btn btn-danger btn-sm"
                                                onclick="return confirm('@_Localization.GetLocalizedHtmlString("ConfirmDelete")')">
                                                 <i class="fa fa-trash"></i>
                                                 @_Localization.GetLocalizedHtmlString("Delete")
-                                            </a>
+                                            </a> *@
 
                                         </div>
                                     </td>

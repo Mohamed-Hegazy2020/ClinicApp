@@ -517,7 +517,7 @@ document.addEventListener('DOMContentLoaded', function () {
    /* kendo.culture(CultureName);*/
     CheckValidationDisplay();
     initSidebarClick();
-    InitKendoDropDown("select");
+    //InitKendoDropDown("select");
     $(".k-dropdown").each(function (i, c) {
         if ($(c).find("select").attr("readonly")) {
             $(c).addClass("disabledDropDown");

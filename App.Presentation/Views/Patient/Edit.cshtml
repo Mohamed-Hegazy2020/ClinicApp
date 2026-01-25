@@ -1,0 +1,151 @@
+﻿@model PatientModel
+@{
+    ViewData["Title"] = "Edit New Patient";
+}
+
+<div class="container mt-3">
+    <div class="card shadow-lg border-0">
+        <form asp-action="Edit" method="post">
+            <div class="buttonsbox d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fa fa-user-plus"></i>
+                    @_Localization.GetLocalizedHtmlString("CreateNewPatient")
+                </h5>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="fas fa-check"></i>
+                        @_Localization.GetLocalizedHtmlString("Save")
+                    </button>
+                    <a asp-action="Create" class="btn btn-primary me-2">
+                        <i class="fas fa-plus"></i>
+                        @_Localization.GetLocalizedHtmlString("CreateNew")
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger me-2" onclick="return confirm('@_Localization.GetLocalizedHtmlString("ConfirmDelete")')">
+                        <i class="fas fa-trash"></i>
+                        @_Localization.GetLocalizedHtmlString("Delete")
+                    </a>
+                    <a asp-action="List" class="btn btn-info me-2">
+                        <i class="fas fa-th-list"></i>
+                        @_Localization.GetLocalizedHtmlString("BackToList")
+                    </a>
+
+                </div>
+
+            </div>  
+
+            <div class="clearfix"></div>
+            <div class="card-body">
+                @*  <div asp-validation-summary="All" class="alert alert-danger" style="display:block"></div> *@
+                <div class="row">
+                    <div class="bg-info text-light p-2">@_Localization.GetLocalizedHtmlString("PersonalData")</div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Code" class="form-label"></label>
+                        <input asp-for="Code" class="form-control" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="NameAr" class="form-label"></label>
+                        <input asp-for="NameAr" class="form-control" />
+                        <span asp-validation-for="NameAr" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="DateOfBirth" class="form-label"></label>
+                        <input asp-for="DateOfBirth" class="form-control" />
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Age" class="form-label"></label>
+                        <input asp-for="Age" class="form-control" />
+                        <span asp-validation-for="Age" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Gender" class="control-label"></label>
+                        <select asp-for="Gender" class="form-control form-select" asp-items="@(new SelectList(ViewBag.Gender,"Value","Text",0))"></select>
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PhoneNumber" class="form-label"></label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Address" class="form-label"></label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="bg-info text-light p-2">@_Localization.GetLocalizedHtmlString("MidicalData")</div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="BloodType" class="control-label"></label>
+                        <select asp-for="BloodType" class="form-control form-select" asp-items="@(new SelectList(ViewBag.BloodType,"Value","Text",0))"></select>
+                        <span asp-validation-for="BloodType" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <label asp-for="HasAllergies" class="control-label mt-3 ms-1"></label>
+                            <input type="checkbox" class="form-check-input" asp-for="HasAllergies" />
+                        </label>
+                    </div>
+                    <div class="col-md-12 mb-6">
+                        <label asp-for="AllergiesDetails" class="form-label"></label>
+                        <textarea asp-for="AllergiesDetails" class="form-control"> </textarea>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <label asp-for="HasChronicDiseases" class="control-label mt-3 ms-1"></label>
+                            <input type="checkbox" class="form-check-input" asp-for="HasChronicDiseases" />
+                        </label>
+                    </div>
+                    <div class="col-md-12 mb-6">
+                        <label asp-for="ChronicDiseasesDetails" class="form-label"></label>
+                        <textarea asp-for="ChronicDiseasesDetails" class="form-control"> </textarea>
+                    </div>
+                    <div class="col-md-12 mb-6">
+                        <label asp-for="CurrentMedications" class="form-label"></label>
+                        <textarea asp-for="CurrentMedications" class="form-control"> </textarea>
+                    </div>
+                    <div class="col-md-12 mb-6">
+                        <label asp-for="PastSurgeries" class="form-label"></label>
+                        <textarea asp-for="PastSurgeries" class="form-control"> </textarea>
+                    </div>
+                    <div class="col-md-12 mb-6">
+                        <label asp-for="FamilyMedicalHistory" class="form-label"></label>
+                        <textarea asp-for="FamilyMedicalHistory" class="form-control"> </textarea>
+                    </div>
+
+
+
+
+
+                </div>
+
+
+
+
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+         $(document).ready(function () {
+          CreateDatePickerWithElment($("#DateOfBirth"), false, '', '');
+        });
+    </script>
+
+
+    <partial name="_ValidationScriptsPartial" />
+}
+
+

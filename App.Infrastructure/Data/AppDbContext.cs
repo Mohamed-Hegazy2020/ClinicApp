@@ -14,6 +14,7 @@ namespace App.Infrastructure.Data
         }
 
         public DbSet<Clinic> Clinic { get; set; }
+        public DbSet<Patient> Patient { get; set; }
  
 
     }

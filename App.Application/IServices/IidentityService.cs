@@ -8,14 +8,18 @@ namespace App.Application.IServices
     public interface IidentityService
     {
         //user
-        public Task<IdentityResultModel> AddUserAsync(ApplicationUser user,List<ApplicationRole> roles, string password);   
+        Task<IdentityResultModel> AddUserAsync(ApplicationUser user,List<ApplicationRole> roles, string password);
+        Task<List<ApplicationUserWithRoles>> GetAllUsersWithRolesAsync();
         Task<IEnumerable<ApplicationUser>> GetAllUsersAsync();
         Task<ApplicationUser> GetUserByEmailAsync(string email);
         Task<ApplicationUser> GetUserByIdAsync(int id);
         Task<ApplicationUser> GetUserByNameAsync(string userName);
-        Task UpdateUserAsync(int id, ApplicationUser user);
-        Task DeleteUserAsync(string id);
+        Task UpdateUserAsync(ApplicationUser user);
+        Task DeleteUserAsync(ApplicationUser user);
         bool IsSignedInUser(ClaimsPrincipal principal);
+        Task<IList<string>> GetUserRolesAsync(ApplicationUser user);
+        Task AddUserToRolesAsync(ApplicationUser user ,List<string> roles);
+        Task RemoveUserFromRolesAsync(ApplicationUser user ,List<string> roles);
 
 
 

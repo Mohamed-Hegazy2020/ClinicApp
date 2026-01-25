@@ -82,19 +82,34 @@
     .dropdown-item:hover {
         background-color: #f3f4f6;
     }
+
+    .stretched-image {
+        height: 40px;
+        width: auto;
+    }
+
 </style>
 
 <header id="page-topbar">
     <div class="navbar-header">
         <!-- 🔹 Left Section: Logo -->
-        <div class="d-flex align-items-center">
+@*         <div class="d-flex align-items-center">
             <a asp-controller="Home" asp-action="Index" class="logo d-flex align-items-center text-decoration-none">
                 <span class="logo-sm">
-                    <img class="stretched-image" src="~/AdminLayout/assets/images/clincilogo.jpg" alt="Logo Small">
+                    <img class="stretched-image" src="~/AdminLayout/assets/images/healthcare.png" alt="Logo Small">
                 </span>
                 <span class="logo-lg text-light ms-2 fw-semibold fs-5">
-                    <img class="stretched-image" src="~/AdminLayout/assets/images/clincilogo.jpg" alt="Logo Large">
+                    <img class="stretched-image" src="~/AdminLayout/assets/images/healthcare.png" alt="Logo Large">
                 </span>
+            </a>
+        </div> *@
+
+        <div class="d-flex align-items-center">
+            <a asp-controller="Home" asp-action="Dashpoard" class="logo d-flex align-items-center text-decoration-none">
+                <img src="~/AdminLayout/assets/images/healthcare.png"
+                     alt="Clinic Logo"
+                     style="height:40px;" class="me-2">
+                <span class="fw-bold fs-5 text-light">MY CLINIC</span>
             </a>
         </div>
 

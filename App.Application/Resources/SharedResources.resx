@@ -126,8 +126,8 @@
   <data name="NameEn" xml:space="preserve">
     <value>NameEn</value>
   </data>
-  <data name="AddNew" xml:space="preserve">
-    <value>AddNew</value>
+  <data name="CreateNew" xml:space="preserve">
+    <value>CreateNew</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Back</value>
@@ -173,5 +173,95 @@
   </data>
   <data name="Main" xml:space="preserve">
     <value>Main</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>DateOfBirth</value>
+  </data>
+  <data name="Age" xml:space="preserve">
+    <value>Age</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>PhoneNumber</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="BloodType" xml:space="preserve">
+    <value>BloodType</value>
+  </data>
+  <data name="HasAllergies" xml:space="preserve">
+    <value>HasAllergies</value>
+  </data>
+  <data name="AllergiesDetails" xml:space="preserve">
+    <value>AllergiesDetails</value>
+  </data>
+  <data name="HasChronicDiseases" xml:space="preserve">
+    <value>HasChronicDiseases</value>
+  </data>
+  <data name="ChronicDiseasesDetails" xml:space="preserve">
+    <value>ChronicDiseasesDetails</value>
+  </data>
+  <data name="CurrentMedications" xml:space="preserve">
+    <value>CurrentMedications</value>
+  </data>
+  <data name="PastSurgeries" xml:space="preserve">
+    <value>PastSurgeries</value>
+  </data>
+  <data name="FamilyMedicalHistory" xml:space="preserve">
+    <value>FamilyMedicalHistory</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="PatientsList" xml:space="preserve">
+    <value>PatientsList</value>
+  </data>
+  <data name="CreateNewPatient" xml:space="preserve">
+    <value>CreateNewPatient</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>BackToList</value>
+  </data>
+  <data name="PersonalData" xml:space="preserve">
+    <value>PersonalData</value>
+  </data>
+  <data name="MidicalData" xml:space="preserve">
+    <value>MidicalData</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="Patients" xml:space="preserve">
+    <value>Patients</value>
+  </data>
+  <data name="Mobile" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="DoctorName" xml:space="preserve">
+    <value>DoctorName</value>
+  </data>
+  <data name="WorkTimes" xml:space="preserve">
+    <value>WorkTimes</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="ClinicsList" xml:space="preserve">
+    <value>ClinicsList</value>
+  </data>
+  <data name="Fax" xml:space="preserve">
+    <value>Fax</value>
+  </data>
+  <data name="CreateNewClinic" xml:space="preserve">
+    <value>CreateNewClinic</value>
+  </data>
+  <data name="EditClinic" xml:space="preserve">
+    <value>EditClinic</value>
   </data>
 </root>

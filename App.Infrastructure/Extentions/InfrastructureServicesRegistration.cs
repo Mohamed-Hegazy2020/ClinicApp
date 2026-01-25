@@ -18,7 +18,8 @@ namespace App.Infrastructure.Extentions
             });
             //Repositories
             services.AddTransient(typeof(IBaseRepository<>), (typeof(BaseRepository<>)));
-            services.AddTransient<IClinicRepository, CompanyRepository>();
+            services.AddTransient<IClinicRepository, ClinicRepository>();
+            services.AddTransient<IPatientRepository, PatientRepository>();
     
 
             return services;

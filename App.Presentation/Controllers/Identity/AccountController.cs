@@ -23,23 +23,202 @@ namespace App.Presentation.Controllers.Identity
 
         }
 
+        #region User
         public IActionResult Index()
         {
             return View();
         }
 
-     
+
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UserList(string search)
+        public async Task<IActionResult> UserList(string search,string msg)
         {
-            var users = await _identityService.GetAllUsersAsync();
-            var usersModel = _mapper.Map<List<ApplicationUserModel>>(users);
+            var usersWithRoles = await _identityService.GetAllUsersWithRolesAsync();
             if (!string.IsNullOrEmpty(search))
-                usersModel = usersModel.Where(x => x.UserName.Contains(search) || x.Email.Contains(search)).ToList();
+            {
+                usersWithRoles = usersWithRoles
+                    .Where(u => u.User.UserName.Contains(search, StringComparison.OrdinalIgnoreCase)|| u.User.Email.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            var usersModel = usersWithRoles.Select(u =>
+            {
+                var model = _mapper.Map<ApplicationUserModel>(u.User);
+                //model.SelectedRoles = u.Roles;
+                model.RolesDisplay = string.Join(", ", u.Roles);
+                return model;
+            }).ToList();
+
             ViewBag.Search = search;
+            if (!string.IsNullOrEmpty(msg))
+            {
+                ViewData["NotificationMsg"] = Notification.Erorr(msg);
+            }
             return View(usersModel);
         }
 
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddUser()
+        {
+            var Roles = await _identityService.GetAllRolesAsync();
+            var AvailableRoles = Roles.Select(r => new SelectListItem
+            {
+                Value = r.Name,
+                Text = r.Name
+            }).ToList();
+            ApplicationUserModel ApplicationUserModel = new ApplicationUserModel();
+            ApplicationUserModel.AvailableRoles = AvailableRoles;
+            return View(ApplicationUserModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddUser(ApplicationUserModel userModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = _mapper.Map<ApplicationUser>(userModel);
+                var Roles = await _identityService.GetAllRolesAsync();
+                var selectedRoles = Roles.Where(x => userModel.SelectedRoles.Contains(x.Name)).ToList();
+                var result = await _identityService.AddUserAsync(user, selectedRoles, userModel.Password);
+                var AvailableRoles = Roles.Select(r => new SelectListItem
+                {
+                    Value = r.Name,
+                    Text = r.Name
+                }).ToList();
+                userModel.AvailableRoles = AvailableRoles;
+                if (result.Succeeded)
+                {
+                    ViewData["NotificationMsg"] = Notification.Success("User created successfully");
+                    return View(userModel);
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", result.Message);
+                }
+            }
+            return View(userModel);
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EditUser(int id)
+        {
+            var user = await _identityService.GetUserByIdAsync(id);
+            if (user == null)
+                return NotFound();
+
+            var model = _mapper.Map<ApplicationUserModel>(user);
+
+            var userRoles = await _identityService.GetUserRolesAsync(user);
+            var roles = await _identityService.GetAllRolesAsync();
+
+            model.SelectedRoles = userRoles.ToList();
+            model.AvailableRoles = roles.Select(r => new SelectListItem
+            {
+                Value = r.Name,
+                Text = r.Name
+            }).ToList();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(ApplicationUserModel model)
+        {
+            // Reload roles if model is invalid to redisplay the view
+            var roles = await _identityService.GetAllRolesAsync();
+            model.AvailableRoles = roles.Select(r => new SelectListItem
+            {
+                Value = r.Name,
+                Text = r.Name
+            }).ToList();
+            if (!ModelState.IsValid)
+            {                
+                return View(model);
+            }
+
+            // Get the user from database
+            var user = await _identityService.GetUserByIdAsync(model.Id);
+            if (user == null)
+                return NotFound();
+
+            // Update basic fields
+            //_mapper.Map(model, user); // Map updated properties from model to entity
+
+            // Update roles
+            var currentRoles = await _identityService.GetUserRolesAsync(user);
+            var rolesToAdd = model.SelectedRoles.Except(currentRoles).ToList();
+            var rolesToRemove = currentRoles.Except(model.SelectedRoles).ToList();
+
+            if (rolesToAdd.Any())
+                await _identityService.AddUserToRolesAsync(user, rolesToAdd);
+
+            if (rolesToRemove.Any())
+                await _identityService.RemoveUserFromRolesAsync(user, rolesToRemove);
+
+            user.UserName = model.UserName;             
+            user.Email = model.Email;             
+
+            // Save changes
+            await _identityService.UpdateUserAsync(user);
+            ViewData["NotificationMsg"] = Notification.Success("User updated successfully");
+            return View(model);
+            //return RedirectToAction("UserList");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            // 1. Find the user
+            string msg = "";
+            var user = await _identityService.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                //ViewData["NotificationMsg"] = Notification.Erorr("User not found.");
+                msg = "User not found.";
+                return RedirectToAction("UserList", new { msg = msg });
+            }
+
+            // 2. Prevent deleting yourself (optional)
+            if (user.UserName == User.Identity!.Name)
+            {
+                //ViewData["NotificationMsg"] = Notification.Erorr("You cannot delete your own account.");
+                msg = "You cannot delete your own account.";
+                return RedirectToAction("UserList", new { msg = msg });
+            }
+
+            // 3. Delete user
+            try
+            {
+                await _identityService.DeleteUserAsync(user);
+                msg = "User deleted successfully.";
+                //ViewData["NotificationMsg"] = Notification.Success("User deleted successfully.");
+            }
+            catch (Exception ex)
+            {    
+                msg = $"Error deleting user: {ex.Message}";
+                //ViewData["NotificationMsg"] = Notification.Erorr($"Error deleting user: {ex.Message}");
+            }
+
+            return RedirectToAction("UserList",new {msg = msg });
+        }
+
+
+        #endregion
+
+
+
+
+
+        #region Login
 
         [HttpGet]
         public async Task<IActionResult> Register()
@@ -76,59 +255,10 @@ namespace App.Presentation.Controllers.Identity
 
 
             }
-        
-                
+
+
             return View();
         }
-
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddUser()
-        {
-           var Roles =await _identityService.GetAllRolesAsync();
-           var AvailableRoles = Roles.Select(r => new SelectListItem
-           {
-                Value =r.Name,
-                Text = r.Name
-            }).ToList();
-            ApplicationUserModel ApplicationUserModel = new ApplicationUserModel();
-            ApplicationUserModel.AvailableRoles = AvailableRoles;
-            return View(ApplicationUserModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddUser(ApplicationUserModel userModel)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = _mapper.Map<ApplicationUser>(userModel);
-                var Roles = await _identityService.GetAllRolesAsync();
-                var selectedRoles = Roles.Where(x=> userModel.SelectedRoles.Contains(x.Name)).ToList();
-                var result = await _identityService.AddUserAsync(user, selectedRoles, userModel.Password);
-                var AvailableRoles = Roles.Select(r => new SelectListItem
-                {
-                    Value = r.Name,
-                    Text = r.Name
-                }).ToList();
-                userModel.AvailableRoles = AvailableRoles;
-                if (result.Succeeded)
-                {
-                    ViewData["NotificationMsg"] = Notification.Success("User created successfully");
-                    return View(userModel);
-                }
-                else
-                {
-                    
-                    ModelState.AddModelError("", result.Message);
-                }
-            }
-            return View(userModel);
-        }
-
-
-
         public async Task<IActionResult> LogIn()
         {
             return View();
@@ -157,7 +287,7 @@ namespace App.Presentation.Controllers.Identity
                 ModelState.AddModelError("", result.Message);
                 return View();
             }
-            
+
         }
 
         [HttpPost]
@@ -166,6 +296,10 @@ namespace App.Presentation.Controllers.Identity
             await _identityService.LogoutAsync();
             return RedirectToAction("LogIn", "Account");
 
-        }
+        } 
+        #endregion
+
+
+
     }
 }

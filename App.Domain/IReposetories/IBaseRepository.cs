@@ -1,13 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace App.Domain.IReposetories
+﻿namespace App.Domain.IReposetories
 {
-    public interface IBaseRepository<T> where T : class
+	public interface IBaseRepository<T> where T : class
     {
         Task<int> AddAsync(T entity);
         Task<int> UpdateAsync(T entity);

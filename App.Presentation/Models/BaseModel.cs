@@ -7,7 +7,8 @@ namespace App.Presentation.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        public int Code { get; set; }
+		[Display(Name = "NameAr")]
+		public int Code { get; set; }
         public DateTime? CreationDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
     }

@@ -43,7 +43,10 @@ namespace App.Presentation.Models.Identity
         public bool IsPersistent { get; set; }
         [Required]
         [Display(Name = "Roles")]
-        public List<string> SelectedRoles { get; set; }    
+        public List<string> SelectedRoles { get; set; }
+        [Ignore]
+        [Display(Name = "Roles")]
+        public string? RolesDisplay { get; set; }    
         
         public IEnumerable<SelectListItem>? AvailableRoles { get; set; }
         public ApplicationUserModel()

@@ -12,11 +12,15 @@
                 {
                     new SideMenuItem()
                     {
-                        ItemTextLocalizationResource="ClinicData", Controler="Clinic",Action="Index",Data_Ds_Target="",Icon="k-icon k-i-collapse",ItemType=SideMenuItemType.SubSubMenu
+                        ItemTextLocalizationResource="ClinicData", Controler="Clinic",Action="List",Data_Ds_Target="",Icon="k-icon k-i-collapse",ItemType=SideMenuItemType.SubSubMenu
                     },
                     new SideMenuItem()
                     {
                         ItemTextLocalizationResource="Users", Controler="Account",Action="UserList",Data_Ds_Target="",Icon="k-icon k-i-collapse",ItemType=SideMenuItemType.SubSubMenu
+                    },
+                  new SideMenuItem()
+                    {
+                        ItemTextLocalizationResource="Patients", Controler="Patient",Action="List",Data_Ds_Target="",Icon="k-icon k-i-collapse",ItemType=SideMenuItemType.SubSubMenu
                     },
 
                 }

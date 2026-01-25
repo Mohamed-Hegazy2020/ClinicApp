@@ -14,6 +14,7 @@ namespace App.Application.Extentions
             services.AddSingleton(typeof(LocalizationService));
             services.AddTransient<IidentityService, IdentityService>();
             services.AddTransient<IClinicService, ClinicService>();
+            services.AddTransient<IPatientService, PatientService>();
    
 
 
